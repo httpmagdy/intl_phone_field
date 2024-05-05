@@ -1,6 +1,7 @@
 library intl_phone_field;
 
 import 'dart:async';
+
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -357,25 +358,46 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
 
   Future<void> _changeCountry() async {
     filteredCountries = _countryList;
-    await showDialog(
-      context: context,
-      useRootNavigator: false,
-      builder: (context) => StatefulBuilder(
-        builder: (ctx, setState) => CountryPickerDialog(
-          languageCode: widget.languageCode.toLowerCase(),
-          style: widget.pickerDialogStyle,
-          filteredCountries: filteredCountries,
-          searchText: widget.searchText,
-          countryList: _countryList,
-          selectedCountry: _selectedCountry,
-          onCountryChanged: (Country country) {
-            _selectedCountry = country;
-            widget.onCountryChanged?.call(country);
-            setState(() {});
-          },
-        ),
-      ),
-    );
+    await showModalBottomSheet(
+        context: context,
+        useRootNavigator: false,
+        isScrollControlled: true,
+        useSafeArea: true,
+        builder: (context) => StatefulBuilder(
+              builder: (ctx, setState) => CountryPickerDialog(
+                languageCode: widget.languageCode.toLowerCase(),
+                style: widget.pickerDialogStyle,
+                filteredCountries: filteredCountries,
+                searchText: widget.searchText,
+                countryList: _countryList,
+                selectedCountry: _selectedCountry,
+                onCountryChanged: (Country country) {
+                  _selectedCountry = country;
+                  widget.onCountryChanged?.call(country);
+                  setState(() {});
+                },
+              ),
+            ));
+    // await showDialog(
+    //   context: context,
+    //   useRootNavigator: false,
+    //   builder: (context) => StatefulBuilder(
+    //     builder: (ctx, setState) => CountryPickerDialog(
+    //       languageCode: widget.languageCode.toLowerCase(),
+    //       style: widget.pickerDialogStyle,
+    //       filteredCountries: filteredCountries,
+    //       searchText: widget.searchText,
+    //       countryList: _countryList,
+    //       selectedCountry: _selectedCountry,
+    //       onCountryChanged: (Country country) {
+    //         _selectedCountry = country;
+    //         widget.onCountryChanged?.call(country);
+    //         setState(() {});
+    //       },
+    //     ),
+    //   ),
+    // );
+
     if (mounted) setState(() {});
   }
 
